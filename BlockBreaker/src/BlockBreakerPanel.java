@@ -43,8 +43,21 @@ public class BlockBreakerPanel extends JPanel implements KeyListener {
 	BlockBreakerPanel(JFrame frame, JFrame startScreen) {
 		this.mainFrame = frame;
 		this.startScreen = startScreen;
+		
 		reset();
 		
+		thread = new Thread(() -> {
+			while (true) {
+				update();
+				try {
+					Thread.sleep(10);
+				} catch(InterruptedException err) {
+					err.printStackTrace();
+				}
+			}
+		});
+		
+		thread.start();
 		
 	}
 	
@@ -88,27 +101,9 @@ public class BlockBreakerPanel extends JPanel implements KeyListener {
 		repaint();
 	}
 	
-	@Override
-	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
+	
 	@Override
 	public void keyPressed(KeyEvent e) {
-		if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-			thread = new Thread(() -> {
-				while (true) {
-					update();
-					try {
-						Thread.sleep(10);
-					} catch(InterruptedException err) {
-						err.printStackTrace();
-					}
-				}
-			});
-			thread.start();
-		}
 		
 		if(e.getKeyCode() == KeyEvent.VK_RIGHT && paddle.x < (getWidth() - paddle.width)) {
 			paddle.x += 15;
@@ -118,11 +113,15 @@ public class BlockBreakerPanel extends JPanel implements KeyListener {
 			paddle.x -= 15;
 		}
 	}
+	
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
-		
 	}
 
 }
